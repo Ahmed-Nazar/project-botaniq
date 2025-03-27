@@ -13,7 +13,7 @@ const LoginPage: React.FC = () => {
               <Lock className="h-6 w-6 text-primary" />
             </div>
           </div>
-          <h1 className="text-2xl font-bold">Welcome to Botaniq</h1>
+          <h1 className="text-2xl font-bold">Welcome to BotaniQ</h1>
           <p className="text-muted-foreground">Sign in to access your garden</p>
         </div>
         <AuthForm />
