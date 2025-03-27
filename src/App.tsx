@@ -10,6 +10,7 @@ import Navbar from "./components/Navbar";
 import HomePage from "./components/HomePage";
 import PlantingMenu from "./components/PlantingMenu";
 import Marketplace from "./components/Marketplace";
+import LoginPage from "./components/LoginPage";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
         <Navbar />
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/planting" element={<PlantingMenu />} />
           <Route path="/marketplace" element={<Marketplace />} />

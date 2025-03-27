@@ -11,70 +11,78 @@ const PlantingMenu: React.FC = () => {
 
   const seasonalPlants = [
     {
-      name: "Tomatoes",
-      image: "https://images.unsplash.com/photo-1518977822534-7049a61ee0c2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80",
+      name: "Lavender",
+      image: "https://images.unsplash.com/photo-1458449736393-11b3fa25c7f9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+      category: "Flowers",
+      season: "Spring/Summer",
+      growthTime: "90-120 days",
+      waterNeeds: "Low",
+      sunlight: "Full sun",
+      difficulty: "Beginner",
+      description: "Fragrant perennial with beautiful purple blooms. Great for attracting bees and butterflies."
+    },
+    {
+      name: "Aloe Vera",
+      image: "https://images.unsplash.com/photo-1596547609652-9cf5d8886a18?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+      category: "Medicinal",
+      season: "Year-round",
+      growthTime: "3-4 years (mature)",
+      waterNeeds: "Low",
+      sunlight: "Partial sun",
+      difficulty: "Beginner",
+      description: "Succulent plant known for its medicinal properties and ease of care."
+    },
+    {
+      name: "Rosemary",
+      image: "https://images.unsplash.com/photo-1515586000433-45406d8e6662?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+      category: "Preservative",
       season: "Spring",
-      growthTime: "70-85 days",
-      waterNeeds: "Regular",
+      growthTime: "80-100 days",
+      waterNeeds: "Low",
       sunlight: "Full sun",
       difficulty: "Beginner",
-      description: "Tomatoes are warm-season plants that thrive in full sun and well-drained soil."
+      description: "Aromatic herb used as a natural preservative and adds flavor to dishes."
     },
     {
-      name: "Lettuce",
-      image: "https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-      season: "Spring/Fall",
-      growthTime: "45-60 days",
-      waterNeeds: "Moderate",
-      sunlight: "Partial shade",
-      difficulty: "Beginner",
-      description: "Lettuce is a cool-season crop that grows best in spring and fall."
-    },
-    {
-      name: "Carrots",
-      image: "https://images.unsplash.com/photo-1598170845056-d10814757416?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-      season: "Spring/Fall",
-      growthTime: "60-80 days",
+      name: "Chamomile",
+      image: "https://images.unsplash.com/photo-1566554273541-37a9ca77b91f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+      category: "Medicinal",
+      season: "Spring/Summer",
+      growthTime: "60-90 days",
       waterNeeds: "Moderate",
       sunlight: "Full sun",
       difficulty: "Intermediate",
-      description: "Carrots grow best in loose, sandy soil free from rocks and debris."
+      description: "Daisy-like flowers known for their calming properties and medicinal uses."
     },
     {
-      name: "Bell Peppers",
-      image: "https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
-      season: "Summer",
+      name: "Roses",
+      image: "https://images.unsplash.com/photo-1559563362-c667ba5f5480?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+      category: "Flowers",
+      season: "Spring/Summer",
+      growthTime: "120-180 days",
+      waterNeeds: "Moderate",
+      sunlight: "Full sun",
+      difficulty: "Intermediate",
+      description: "Classic garden flowers with beautiful blooms and various fragrances."
+    },
+    {
+      name: "Thyme",
+      image: "https://images.unsplash.com/photo-1550005809-91ad75fb315f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80",
+      category: "Preservative",
+      season: "Spring/Summer",
       growthTime: "70-90 days",
-      waterNeeds: "Regular",
-      sunlight: "Full sun",
-      difficulty: "Intermediate",
-      description: "Bell peppers need warm soil and a long growing season to produce well."
-    },
-    {
-      name: "Basil",
-      image: "https://images.unsplash.com/photo-1600788886242-5c96aabe3757?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-      season: "Summer",
-      growthTime: "50-70 days",
-      waterNeeds: "Moderate",
+      waterNeeds: "Low",
       sunlight: "Full sun",
       difficulty: "Beginner",
-      description: "Basil is a heat-loving herb that adds delicious flavor to many dishes."
-    },
-    {
-      name: "Spinach",
-      image: "https://images.unsplash.com/photo-1576045057995-568f588f82fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-      season: "Spring/Fall",
-      growthTime: "40-50 days",
-      waterNeeds: "Moderate",
-      sunlight: "Partial shade",
-      difficulty: "Beginner",
-      description: "Spinach is a fast-growing, cool-weather crop rich in vitamins and minerals."
+      description: "Hardy herb used as a natural preservative with antibacterial properties."
     }
   ];
 
+  // Filter plants based on search query and category
   const filteredPlants = searchQuery 
     ? seasonalPlants.filter(plant => 
         plant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        plant.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
         plant.season.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : seasonalPlants;
@@ -92,7 +100,7 @@ const PlantingMenu: React.FC = () => {
         <div className="flex justify-between items-start">
           <div>
             <CardTitle>{plant.name}</CardTitle>
-            <CardDescription>Season: {plant.season}</CardDescription>
+            <CardDescription>Category: {plant.category}</CardDescription>
           </div>
           <div className="bg-primary/10 px-3 py-1 rounded-full text-xs font-medium text-primary">
             {plant.difficulty}
@@ -133,8 +141,8 @@ const PlantingMenu: React.FC = () => {
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Planting Guide</h1>
-            <p className="text-muted-foreground">Discover what to plant based on season and your growing zone</p>
+            <h1 className="text-3xl font-bold mb-2">Botaniq Planting Guide</h1>
+            <p className="text-muted-foreground">Discover our selection of flowers, medicinal plants, and preservative herbs</p>
           </div>
           <div className="relative w-full md:w-auto">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -147,20 +155,45 @@ const PlantingMenu: React.FC = () => {
           </div>
         </div>
 
-        <Tabs defaultValue="spring" className="mb-8">
+        <Tabs defaultValue="all" className="mb-8">
           <TabsList className="w-full md:w-auto grid grid-cols-4 mb-6">
-            <TabsTrigger value="spring">Spring</TabsTrigger>
-            <TabsTrigger value="summer">Summer</TabsTrigger>
-            <TabsTrigger value="fall">Fall</TabsTrigger>
-            <TabsTrigger value="winter">Winter</TabsTrigger>
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="flowers">Flowers</TabsTrigger>
+            <TabsTrigger value="medicinal">Medicinal</TabsTrigger>
+            <TabsTrigger value="preservative">Preservative</TabsTrigger>
           </TabsList>
           
-          {["spring", "summer", "fall", "winter"].map(season => (
-            <TabsContent key={season} value={season} className="mt-0">
-              {filteredPlants.length > 0 ? (
+          <TabsContent value="all" className="mt-0">
+            {filteredPlants.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredPlants.map((plant, index) => (
+                  <PlantCard key={index} plant={plant} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                  <Calendar className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">No Plants Found</h3>
+                <p className="text-muted-foreground mb-4">
+                  Try adjusting your search or filters to find what you're looking for.
+                </p>
+                <Button variant="outline" onClick={() => setSearchQuery('')}>
+                  Clear Search
+                </Button>
+              </div>
+            )}
+          </TabsContent>
+          
+          {["flowers", "medicinal", "preservative"].map(category => (
+            <TabsContent key={category} value={category} className="mt-0">
+              {filteredPlants.filter(plant => 
+                plant.category.toLowerCase() === category.toLowerCase()
+              ).length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {filteredPlants
-                    .filter(plant => plant.season.toLowerCase().includes(season.toLowerCase()))
+                    .filter(plant => plant.category.toLowerCase() === category.toLowerCase())
                     .map((plant, index) => (
                       <PlantCard key={index} plant={plant} />
                     ))}
