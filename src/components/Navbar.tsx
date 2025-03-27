@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -63,7 +62,7 @@ const Navbar: React.FC = () => {
       <div className="container mx-auto">
         <div className="flex justify-between items-center">
           <Link to={isAuthenticated ? '/home' : '/'} className={logoClasses}>
-            <Leaf className="h-6 w-6 mr-2" /> GreenThumb
+            <Leaf className="h-6 w-6 mr-2" /> BotaniQ
           </Link>
 
           {/* Desktop Navigation */}
