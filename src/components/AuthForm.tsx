@@ -6,13 +6,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Facebook, Mail, Twitter } from "lucide-react";
+import { Facebook, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { toast } from 'sonner';
 
 const AuthForm: React.FC = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("login");
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -82,9 +83,13 @@ const AuthForm: React.FC = () => {
     }, 1500);
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   if (forgotPassword) {
     return (
-      <Card className="w-full max-w-md mx-auto glass animate-fade-in">
+      <Card className="w-full max-w-md mx-auto animate-fade-in">
         <CardHeader>
           <CardTitle className="text-2xl font-semibold text-center">Reset Password</CardTitle>
           <CardDescription className="text-center">
@@ -125,7 +130,7 @@ const AuthForm: React.FC = () => {
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto glass animate-fade-in">
+    <Card className="w-full max-w-md mx-auto animate-fade-in">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <CardHeader>
           <div className="flex justify-center">
@@ -139,13 +144,13 @@ const AuthForm: React.FC = () => {
           <TabsContent value="login" className="animate-slide-up">
             <form onSubmit={handleSignIn} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="username">Username</Label>
                 <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="name@example.com"
-                  value={formData.email}
+                  id="username"
+                  name="username"
+                  type="text"
+                  placeholder="johndoe"
+                  value={formData.username}
                   onChange={handleChange}
                   required
                   className="w-full"
@@ -162,16 +167,27 @@ const AuthForm: React.FC = () => {
                     Forgot password?
                   </Button>
                 </div>
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                  className="w-full"
-                />
+                <div className="relative">
+                  <Input
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                    className="w-full pr-10"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 top-0 h-full px-3"
+                    onClick={togglePasswordVisibility}
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Button>
+                </div>
               </div>
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Signing in..." : "Sign In"}
@@ -209,29 +225,51 @@ const AuthForm: React.FC = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                  className="w-full"
-                />
+                <div className="relative">
+                  <Input
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                    className="w-full pr-10"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 top-0 h-full px-3"
+                    onClick={togglePasswordVisibility}
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Button>
+                </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <Input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  placeholder="••••••••"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  required
-                  className="w-full"
-                />
+                <div className="relative">
+                  <Input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    required
+                    className="w-full pr-10"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 top-0 h-full px-3"
+                    onClick={togglePasswordVisibility}
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Button>
+                </div>
               </div>
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Creating account..." : "Create Account"}
@@ -250,7 +288,7 @@ const AuthForm: React.FC = () => {
             </div>
           </div>
           
-          <div className="grid grid-cols-3 gap-2 mt-4">
+          <div className="grid grid-cols-2 gap-2 mt-4">
             <Button 
               variant="outline" 
               onClick={() => handleSocialLogin('Google')}
@@ -267,16 +305,7 @@ const AuthForm: React.FC = () => {
               disabled={isLoading}
             >
               <Facebook className="h-4 w-4 mr-2" />
-              FB
-            </Button>
-            <Button 
-              variant="outline" 
-              onClick={() => handleSocialLogin('Twitter')}
-              className="w-full"
-              disabled={isLoading}
-            >
-              <Twitter className="h-4 w-4 mr-2" />
-              X
+              Facebook
             </Button>
           </div>
         </CardContent>
