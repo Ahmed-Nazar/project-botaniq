@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Leaf, ShoppingBag, Menu, X, User, LogOut } from "lucide-react";
+import { Leaf, ShoppingBag, Menu, X, User, LogOut, Users, BarChart2 } from "lucide-react";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -75,6 +75,12 @@ const Navbar: React.FC = () => {
                 <Link to="/marketplace" className={linkClasses}>
                   <span className="flex items-center gap-2"><ShoppingBag className="h-4 w-4" /> Marketplace</span>
                 </Link>
+                <Link to="/community" className={linkClasses}>
+                  <span className="flex items-center gap-2"><Users className="h-4 w-4" /> Community</span>
+                </Link>
+                <Link to="/sustainability" className={linkClasses}>
+                  <span className="flex items-center gap-2"><BarChart2 className="h-4 w-4" /> Sustainability</span>
+                </Link>
 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -88,7 +94,7 @@ const Navbar: React.FC = () => {
                   <DropdownMenuContent align="end" className="w-56">
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/profile')}>
                       <User className="mr-2 h-4 w-4" />
                       <span>Profile</span>
                     </DropdownMenuItem>
@@ -159,6 +165,27 @@ const Navbar: React.FC = () => {
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Marketplace
+            </Link>
+            <Link 
+              to="/community" 
+              className="block py-2 px-4 rounded-md hover:bg-primary/10"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Community
+            </Link>
+            <Link 
+              to="/sustainability" 
+              className="block py-2 px-4 rounded-md hover:bg-primary/10"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Sustainability
+            </Link>
+            <Link 
+              to="/profile" 
+              className="block py-2 px-4 rounded-md hover:bg-primary/10"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Profile
             </Link>
             <Button 
               variant="ghost" 

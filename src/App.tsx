@@ -11,6 +11,9 @@ import HomePage from "./components/HomePage";
 import PlantingMenu from "./components/PlantingMenu";
 import Marketplace from "./components/Marketplace";
 import LoginPage from "./components/LoginPage";
+import Community from "./components/Community";
+import Sustainability from "./components/Sustainability";
+import UserProfile from "./components/UserProfile";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +30,9 @@ const App = () => (
           <Route path="/home" element={<HomePage />} />
           <Route path="/planting" element={<PlantingMenu />} />
           <Route path="/marketplace" element={<Marketplace />} />
+          <Route path="/community" element={<Community />} />
+          <Route path="/sustainability" element={<Sustainability />} />
+          <Route path="/profile" element={<UserProfile />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
