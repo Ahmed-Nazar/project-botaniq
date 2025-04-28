@@ -45,7 +45,7 @@ body {
   border: 1px solid rgba(30, 50, 38, 0.3);
 }
 
-/* Custom theme colors */
+/* Custom theme colors that also work with Bootstrap */
 :root {
   --bs-primary: #22c55e;
   --bs-primary-rgb: 34, 197, 94;
