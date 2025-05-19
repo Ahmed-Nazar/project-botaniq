@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,8 +7,100 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MessageSquare, Award, Calendar, ThumbsUp, ThumbsDown, Check } from "lucide-react";
 
+// Fake user data for forum posts
+const forumUsers = [
+  { id: 1, name: 'John Smith', avatar: 'https://i.pravatar.cc/150?img=1', role: 'Expert Gardener' },
+  { id: 2, name: 'Maria Garcia', avatar: 'https://i.pravatar.cc/150?img=5', role: 'Tree Enthusiast' },
+  { id: 3, name: 'Alex Wong', avatar: 'https://i.pravatar.cc/150?img=3', role: 'Urban Farmer' },
+  { id: 4, name: 'Sarah Johnson', avatar: 'https://i.pravatar.cc/150?img=9', role: 'Botanist' },
+  { id: 5, name: 'Michael Brown', avatar: 'https://i.pravatar.cc/150?img=12', role: 'Sustainability Expert' }
+];
+
+// Forum post data
+const forumTopics = [
+  { 
+    id: 1, 
+    category: 'Plant Care Tips',
+    title: 'How to revive a dying sapling?', 
+    author: forumUsers[0],
+    answers: 23,
+    views: 156,
+    tags: ['Help', 'Hot Topic'],
+    date: '3 days ago'
+  },
+  { 
+    id: 2, 
+    category: 'Plant Care Tips',
+    title: 'Watering schedule for tropical plants?', 
+    author: forumUsers[1],
+    answers: 17,
+    views: 89,
+    tags: ['Solved'],
+    date: '1 week ago'
+  },
+  { 
+    id: 3, 
+    category: 'Species Spotlights',
+    title: 'Best native trees for urban areas', 
+    author: forumUsers[2],
+    answers: 31,
+    views: 210,
+    tags: ['Trending'],
+    date: '2 days ago'
+  },
+  { 
+    id: 4, 
+    category: 'Species Spotlights',
+    title: 'Spotlight: Baobab Trees', 
+    author: forumUsers[3],
+    answers: 12,
+    views: 75,
+    tags: ['Expert Post'],
+    date: '5 days ago'
+  },
+  { 
+    id: 5, 
+    category: 'Troubleshooting',
+    title: 'Yellow leaves on my neem tree', 
+    author: forumUsers[4],
+    answers: 15,
+    views: 104,
+    tags: ['Solved'],
+    date: '6 days ago'
+  },
+  { 
+    id: 6, 
+    category: 'Troubleshooting',
+    title: 'Pest control for indoor plants', 
+    author: forumUsers[0],
+    answers: 28,
+    views: 187,
+    tags: ['Verified'],
+    date: '4 days ago'
+  }
+];
+
 const Community: React.FC = () => {
   const [activeTab, setActiveTab] = useState('forums');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredTopics, setFilteredTopics] = useState(forumTopics);
+  
+  // Filter topics based on search term
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+    
+    if (term.trim() === '') {
+      setFilteredTopics(forumTopics);
+    } else {
+      setFilteredTopics(
+        forumTopics.filter(topic => 
+          topic.title.toLowerCase().includes(term.toLowerCase()) ||
+          topic.category.toLowerCase().includes(term.toLowerCase())
+        )
+      );
+    }
+  };
 
   return (
     <div className="container mx-auto pt-24 px-4">
@@ -33,91 +124,107 @@ const Community: React.FC = () => {
         
         {/* Discussion Forums */}
         <TabsContent value="forums">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Plant Care Tips</CardTitle>
-                <CardDescription>Share and find tips on how to care for your plants</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-3">
-                  <li className="p-3 bg-muted/50 rounded-md">
-                    <p className="font-medium">How to revive a dying sapling?</p>
-                    <div className="flex items-center text-sm text-muted-foreground mt-1">
-                      <span>23 answers</span>
-                      <Badge variant="outline" className="ml-2">Hot Topic</Badge>
-                    </div>
-                  </li>
-                  <li className="p-3 bg-muted/50 rounded-md">
-                    <p className="font-medium">Watering schedule for tropical plants?</p>
-                    <div className="flex items-center text-sm text-muted-foreground mt-1">
-                      <span>17 answers</span>
-                      <Badge variant="outline" className="ml-2 bg-green-100">Solved</Badge>
-                    </div>
-                  </li>
-                </ul>
-              </CardContent>
-              <CardFooter>
-                <Button className="w-full">View All Topics</Button>
-              </CardFooter>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Species Spotlights</CardTitle>
-                <CardDescription>Learn about different plant and tree species</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-3">
-                  <li className="p-3 bg-muted/50 rounded-md">
-                    <p className="font-medium">Best native trees for urban areas</p>
-                    <div className="flex items-center text-sm text-muted-foreground mt-1">
-                      <span>31 answers</span>
-                      <Badge variant="outline" className="ml-2">Trending</Badge>
-                    </div>
-                  </li>
-                  <li className="p-3 bg-muted/50 rounded-md">
-                    <p className="font-medium">Spotlight: Baobab Trees</p>
-                    <div className="flex items-center text-sm text-muted-foreground mt-1">
-                      <span>12 answers</span>
-                      <Badge variant="outline" className="ml-2">Expert Post</Badge>
-                    </div>
-                  </li>
-                </ul>
-              </CardContent>
-              <CardFooter>
-                <Button className="w-full">View All Topics</Button>
-              </CardFooter>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Troubleshooting</CardTitle>
-                <CardDescription>Get help with plant problems and issues</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-3">
-                  <li className="p-3 bg-muted/50 rounded-md">
-                    <p className="font-medium">Yellow leaves on my neem tree</p>
-                    <div className="flex items-center text-sm text-muted-foreground mt-1">
-                      <span>15 answers</span>
-                      <Badge variant="outline" className="ml-2 bg-green-100">Solved</Badge>
-                    </div>
-                  </li>
-                  <li className="p-3 bg-muted/50 rounded-md">
-                    <p className="font-medium">Pest control for indoor plants</p>
-                    <div className="flex items-center text-sm text-muted-foreground mt-1">
-                      <span>28 answers</span>
-                      <Badge variant="outline" className="ml-2">Verified</Badge>
-                    </div>
-                  </li>
-                </ul>
-              </CardContent>
-              <CardFooter>
-                <Button className="w-full">View All Topics</Button>
-              </CardFooter>
-            </Card>
+          <div className="flex justify-between mb-6">
+            <div className="relative w-full max-w-md">
+              <Input
+                placeholder="Search discussions..."
+                value={searchTerm}
+                onChange={handleSearch}
+                className="pr-10"
+              />
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <MessageSquare className="h-4 w-4 text-muted-foreground" />
+              </div>
+            </div>
+            <Button>
+              <MessageSquare className="h-4 w-4 mr-2" />
+              New Discussion
+            </Button>
           </div>
+
+          <Card>
+            <CardHeader className="bg-muted/30">
+              <div className="grid grid-cols-12 gap-4">
+                <div className="col-span-7 font-medium">Topic</div>
+                <div className="col-span-2 text-center font-medium">Replies</div>
+                <div className="col-span-3 text-right font-medium">Posted by</div>
+              </div>
+            </CardHeader>
+            <CardContent className="p-0">
+              {filteredTopics.length > 0 ? (
+                <div className="divide-y">
+                  {filteredTopics.map((topic) => (
+                    <div key={topic.id} className="p-4">
+                      <div className="grid grid-cols-12 gap-4 items-center">
+                        <div className="col-span-12 md:col-span-7">
+                          <h4 className="font-medium mb-1">{topic.title}</h4>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <Badge variant="outline">{topic.category}</Badge>
+                            {topic.tags.map((tag, index) => (
+                              <Badge 
+                                key={index} 
+                                className={
+                                  tag === 'Solved' ? 'bg-green-500' : 
+                                  (tag === 'Hot Topic' || tag === 'Trending') ? 'bg-red-500' : 
+                                  'bg-blue-500'
+                                }
+                              >
+                                {tag}
+                              </Badge>
+                            ))}
+                            <span className="text-xs text-muted-foreground">{topic.date}</span>
+                          </div>
+                        </div>
+                        <div className="col-span-4 md:col-span-2 text-center">
+                          <div className="flex flex-col items-center">
+                            <span className="text-lg font-medium">{topic.answers}</span>
+                            <span className="text-xs text-muted-foreground">replies</span>
+                          </div>
+                        </div>
+                        <div className="col-span-8 md:col-span-3">
+                          <div className="flex items-center justify-end gap-2">
+                            <div className="text-right">
+                              <div className="font-medium">{topic.author.name}</div>
+                              <div className="text-xs text-muted-foreground">{topic.author.role}</div>
+                            </div>
+                            <Avatar>
+                              <AvatarImage src={topic.author.avatar} alt={topic.author.name} />
+                              <AvatarFallback>{topic.author.name.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="p-6 text-center">
+                  <p className="text-muted-foreground">No topics found matching your search.</p>
+                </div>
+              )}
+            </CardContent>
+            <CardFooter className="flex justify-center p-4">
+              <nav>
+                <ul className="flex gap-1">
+                  <li>
+                    <Button variant="outline" size="sm" disabled>Previous</Button>
+                  </li>
+                  <li>
+                    <Button variant="outline" size="sm" className="bg-primary text-primary-foreground">1</Button>
+                  </li>
+                  <li>
+                    <Button variant="outline" size="sm">2</Button>
+                  </li>
+                  <li>
+                    <Button variant="outline" size="sm">3</Button>
+                  </li>
+                  <li>
+                    <Button variant="outline" size="sm">Next</Button>
+                  </li>
+                </ul>
+              </nav>
+            </CardFooter>
+          </Card>
         </TabsContent>
         
         {/* Challenges & Campaigns */}
@@ -140,16 +247,16 @@ const Community: React.FC = () => {
                   <div className="flex flex-wrap gap-2 mt-4">
                     <Badge>Top Contributors</Badge>
                     <Avatar className="h-8 w-8 border-2 border-background">
-                      <AvatarImage src="https://github.com/shadcn.png" />
-                      <AvatarFallback>CN</AvatarFallback>
+                      <AvatarImage src="https://i.pravatar.cc/150?img=1" />
+                      <AvatarFallback>JS</AvatarFallback>
                     </Avatar>
                     <Avatar className="h-8 w-8 border-2 border-background">
-                      <AvatarImage src="https://github.com/shadcn.png" />
-                      <AvatarFallback>JD</AvatarFallback>
+                      <AvatarImage src="https://i.pravatar.cc/150?img=5" />
+                      <AvatarFallback>MG</AvatarFallback>
                     </Avatar>
                     <Avatar className="h-8 w-8 border-2 border-background">
-                      <AvatarImage src="https://github.com/shadcn.png" />
-                      <AvatarFallback>AB</AvatarFallback>
+                      <AvatarImage src="https://i.pravatar.cc/150?img=3" />
+                      <AvatarFallback>AW</AvatarFallback>
                     </Avatar>
                   </div>
                 </div>
@@ -209,7 +316,7 @@ const Community: React.FC = () => {
                   </p>
                   <div className="flex items-center gap-2">
                     <Avatar className="h-10 w-10">
-                      <AvatarImage src="https://github.com/shadcn.png" />
+                      <AvatarImage src="https://i.pravatar.cc/150?img=5" />
                       <AvatarFallback>MC</AvatarFallback>
                     </Avatar>
                     <div>
@@ -242,7 +349,7 @@ const Community: React.FC = () => {
                   </p>
                   <div className="flex items-center gap-2">
                     <Avatar className="h-10 w-10">
-                      <AvatarImage src="https://github.com/shadcn.png" />
+                      <AvatarImage src="https://i.pravatar.cc/150?img=12" />
                       <AvatarFallback>JP</AvatarFallback>
                     </Avatar>
                     <div>
