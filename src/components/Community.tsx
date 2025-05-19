@@ -1,15 +1,118 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { MessageSquare, Award, Calendar, ThumbsUp, ThumbsDown, Check } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Award, Calendar, Check, MessageSquare, Search, ThumbsDown, ThumbsUp } from "lucide-react";
+import { supabase, ForumTopic, ForumPost, User } from "@/lib/supabase";
+import { toast } from "@/hooks/use-toast";
 
 const Community: React.FC = () => {
   const [activeTab, setActiveTab] = useState('forums');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [topics, setTopics] = useState<ForumTopic[]>([]);
+  const [filteredTopics, setFilteredTopics] = useState<ForumTopic[]>([]);
+  const [selectedTopic, setSelectedTopic] = useState<ForumTopic | null>(null);
+  const [showTopicDialog, setShowTopicDialog] = useState(false);
+  const [topicPosts, setTopicPosts] = useState<ForumPost[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch forum topics with user data
+  useEffect(() => {
+    const fetchTopics = async () => {
+      setLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from('forums')
+          .select('*');
+          
+        if (error) throw error;
+          
+        // Get user data for each topic
+        const topicsWithUsers = await Promise.all(
+          data.map(async (topic) => {
+            const { data: userData } = await supabase
+              .from('users_demo')
+              .select('*')
+              .eq('id', topic.created_by)
+              .single();
+              
+            return { ...topic, user: userData };
+          })
+        );
+        
+        setTopics(topicsWithUsers);
+        setFilteredTopics(topicsWithUsers);
+      } catch (error) {
+        console.error('Error fetching topics:', error);
+        toast({
+          title: "Failed to load topics",
+          description: "Please try again later",
+          variant: "destructive"
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchTopics();
+  }, []);
+
+  // Handle search filtering
+  useEffect(() => {
+    if (searchQuery.trim() === "") {
+      setFilteredTopics(topics);
+    } else {
+      const filtered = topics.filter(topic => 
+        topic.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (topic.description && topic.description.toLowerCase().includes(searchQuery.toLowerCase()))
+      );
+      setFilteredTopics(filtered);
+    }
+  }, [searchQuery, topics]);
+
+  // Fetch posts for a specific topic
+  const fetchTopicPosts = async (topicId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('forum_posts')
+        .select('*')
+        .eq('forum_id', topicId);
+        
+      if (error) throw error;
+      
+      // Get user data for each post
+      const postsWithUsers = await Promise.all(
+        data.map(async (post) => {
+          const { data: userData } = await supabase
+            .from('users_demo')
+            .select('*')
+            .eq('id', post.created_by)
+            .single();
+            
+          return { ...post, user: userData };
+        })
+      );
+      
+      setTopicPosts(postsWithUsers);
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+      toast({
+        title: "Failed to load discussion",
+        description: "Please try again later",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleViewTopic = (topic: ForumTopic) => {
+    setSelectedTopic(topic);
+    fetchTopicPosts(topic.id);
+    setShowTopicDialog(true);
+  };
 
   return (
     <div className="container mx-auto pt-24 px-4">
@@ -33,94 +136,72 @@ const Community: React.FC = () => {
         
         {/* Discussion Forums */}
         <TabsContent value="forums">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Plant Care Tips</CardTitle>
-                <CardDescription>Share and find tips on how to care for your plants</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-3">
-                  <li className="p-3 bg-muted/50 rounded-md">
-                    <p className="font-medium">How to revive a dying sapling?</p>
-                    <div className="flex items-center text-sm text-muted-foreground mt-1">
-                      <span>23 answers</span>
-                      <Badge variant="outline" className="ml-2">Hot Topic</Badge>
+          <div className="mb-6">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
+              <Input
+                placeholder="Search forums by title or description..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 gap-4">
+            {loading ? (
+              <Card>
+                <CardContent className="p-8 text-center">
+                  <p className="text-muted-foreground">Loading discussions...</p>
+                </CardContent>
+              </Card>
+            ) : filteredTopics.length === 0 ? (
+              <Card>
+                <CardContent className="p-8 text-center">
+                  <p className="text-muted-foreground">No topics found matching your search.</p>
+                </CardContent>
+              </Card>
+            ) : (
+              filteredTopics.map((topic) => (
+                <Card key={topic.id} className="hover:bg-accent/20 transition-colors cursor-pointer" onClick={() => handleViewTopic(topic)}>
+                  <CardContent className="p-4">
+                    <div className="flex items-start gap-4">
+                      <Avatar className="h-10 w-10 border-2 border-background">
+                        <AvatarImage src={topic.user?.avatar_url} />
+                        <AvatarFallback>{topic.user?.username.substring(0, 2).toUpperCase()}</AvatarFallback>
+                      </Avatar>
+                      
+                      <div className="flex-1">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h3 className="font-medium text-lg">{topic.title}</h3>
+                            <p className="text-sm text-muted-foreground mb-2">
+                              Posted by {topic.user?.username || "Unknown"}
+                              {topic.user?.is_pro && (
+                                <Badge className="ml-2 bg-amber-500 hover:bg-amber-600">PRO</Badge>
+                              )}
+                            </p>
+                            <p className="text-sm line-clamp-2">{topic.description}</p>
+                          </div>
+                          <Badge variant="outline">{topic.category}</Badge>
+                        </div>
+                        
+                        <div className="flex items-center text-sm text-muted-foreground mt-4">
+                          <MessageSquare size={16} className="mr-1" />
+                          <span>{topic.replies_count} replies</span>
+                          <span className="mx-2">•</span>
+                          <span>{new Date(topic.created_at).toLocaleDateString()}</span>
+                        </div>
+                      </div>
                     </div>
-                  </li>
-                  <li className="p-3 bg-muted/50 rounded-md">
-                    <p className="font-medium">Watering schedule for tropical plants?</p>
-                    <div className="flex items-center text-sm text-muted-foreground mt-1">
-                      <span>17 answers</span>
-                      <Badge variant="outline" className="ml-2 bg-green-100">Solved</Badge>
-                    </div>
-                  </li>
-                </ul>
-              </CardContent>
-              <CardFooter>
-                <Button className="w-full">View All Topics</Button>
-              </CardFooter>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Species Spotlights</CardTitle>
-                <CardDescription>Learn about different plant and tree species</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-3">
-                  <li className="p-3 bg-muted/50 rounded-md">
-                    <p className="font-medium">Best native trees for urban areas</p>
-                    <div className="flex items-center text-sm text-muted-foreground mt-1">
-                      <span>31 answers</span>
-                      <Badge variant="outline" className="ml-2">Trending</Badge>
-                    </div>
-                  </li>
-                  <li className="p-3 bg-muted/50 rounded-md">
-                    <p className="font-medium">Spotlight: Baobab Trees</p>
-                    <div className="flex items-center text-sm text-muted-foreground mt-1">
-                      <span>12 answers</span>
-                      <Badge variant="outline" className="ml-2">Expert Post</Badge>
-                    </div>
-                  </li>
-                </ul>
-              </CardContent>
-              <CardFooter>
-                <Button className="w-full">View All Topics</Button>
-              </CardFooter>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Troubleshooting</CardTitle>
-                <CardDescription>Get help with plant problems and issues</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-3">
-                  <li className="p-3 bg-muted/50 rounded-md">
-                    <p className="font-medium">Yellow leaves on my neem tree</p>
-                    <div className="flex items-center text-sm text-muted-foreground mt-1">
-                      <span>15 answers</span>
-                      <Badge variant="outline" className="ml-2 bg-green-100">Solved</Badge>
-                    </div>
-                  </li>
-                  <li className="p-3 bg-muted/50 rounded-md">
-                    <p className="font-medium">Pest control for indoor plants</p>
-                    <div className="flex items-center text-sm text-muted-foreground mt-1">
-                      <span>28 answers</span>
-                      <Badge variant="outline" className="ml-2">Verified</Badge>
-                    </div>
-                  </li>
-                </ul>
-              </CardContent>
-              <CardFooter>
-                <Button className="w-full">View All Topics</Button>
-              </CardFooter>
-            </Card>
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
         </TabsContent>
         
-        {/* Challenges & Campaigns */}
+        {/* Challenges & Campaigns Tab (Keeping existing content) */}
         <TabsContent value="challenges">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
@@ -188,7 +269,7 @@ const Community: React.FC = () => {
           </div>
         </TabsContent>
         
-        {/* Expert AMAs */}
+        {/* Expert AMAs Tab (Keeping existing content) */}
         <TabsContent value="amas">
           <div className="space-y-6">
             <Card>
@@ -277,6 +358,59 @@ const Community: React.FC = () => {
           </div>
         </TabsContent>
       </Tabs>
+      
+      {/* Topic Discussion Dialog */}
+      <Dialog open={showTopicDialog} onOpenChange={setShowTopicDialog}>
+        <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{selectedTopic?.title}</DialogTitle>
+            <DialogDescription>
+              Posted by {selectedTopic?.user?.username || "Unknown"} on {selectedTopic && new Date(selectedTopic.created_at).toLocaleDateString()}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="mb-6 p-4 bg-muted/30 rounded-lg">
+            <p>{selectedTopic?.description}</p>
+          </div>
+          
+          <h3 className="font-medium mb-4">Responses ({topicPosts.length})</h3>
+          
+          <div className="space-y-4">
+            {topicPosts.map((post) => (
+              <div key={post.id} className="p-4 border rounded-lg">
+                <div className="flex items-start gap-3 mb-3">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={post.user?.avatar_url} />
+                    <AvatarFallback>{post.user?.username.substring(0, 2).toUpperCase()}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <div className="flex items-center">
+                      <span className="font-medium">{post.user?.username || "Unknown User"}</span>
+                      {post.user?.is_pro && <Badge className="ml-2 bg-amber-500 hover:bg-amber-600">PRO</Badge>}
+                    </div>
+                    <span className="text-xs text-muted-foreground">{new Date(post.created_at).toLocaleDateString()}</span>
+                  </div>
+                </div>
+                <p>{post.content}</p>
+                <div className="flex gap-3 mt-3">
+                  <Button variant="ghost" size="sm" className="h-8 px-2">
+                    <ThumbsUp size={14} className="mr-1" />
+                    <span className="text-xs">Helpful</span>
+                  </Button>
+                  <Button variant="ghost" size="sm" className="h-8 px-2">
+                    <ThumbsDown size={14} className="mr-1" />
+                    <span className="text-xs">Not helpful</span>
+                  </Button>
+                  <Button variant="ghost" size="sm" className="h-8 px-2">
+                    <MessageSquare size={14} className="mr-1" />
+                    <span className="text-xs">Reply</span>
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
