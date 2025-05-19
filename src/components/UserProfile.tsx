@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Tree, Camera, Calendar, TreeDeciduous, Leaf, ShoppingBag, BookOpen, Users, Star, ChevronRight, MapPin, ChevronDown } from "lucide-react";
+import { Trees, Camera, Calendar, TreeDeciduous, Leaf, ShoppingBag, BookOpen, Users, Star, ChevronRight, MapPin, ChevronDown } from "lucide-react";
 import { supabase, User, Friend } from "@/lib/supabase";
 import { toast } from "@/hooks/use-toast";
 
